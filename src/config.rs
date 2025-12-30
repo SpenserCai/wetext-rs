@@ -124,4 +124,3 @@ impl NormalizerConfig {
         self
     }
 }
-

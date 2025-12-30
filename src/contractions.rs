@@ -101,9 +101,7 @@ static PATTERNS: Lazy<Vec<(Regex, String)>> = Lazy::new(|| {
                 // Standard contractions: use word boundaries
                 format!(r"(?i)\b{}\b", escaped)
             };
-            Regex::new(&pattern)
-                .ok()
-                .map(|re| (re, expansion.clone()))
+            Regex::new(&pattern).ok().map(|re| (re, expansion.clone()))
         })
         .collect()
 });
@@ -231,4 +229,3 @@ mod tests {
         assert_eq!(fix_contractions("It's OK"), "it is OK");
     }
 }
-

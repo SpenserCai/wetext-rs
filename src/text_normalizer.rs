@@ -79,7 +79,7 @@ impl FstTextNormalizer {
             _,
             _,
         >(&input_fst, &self.fst)
-            .map_err(|e| WeTextError::FstOperationError(format!("compose failed: {}", e)))?;
+        .map_err(|e| WeTextError::FstOperationError(format!("compose failed: {}", e)))?;
 
         // Check if compose result is empty (no match)
         if composed.num_states() == 0 {
@@ -107,8 +107,8 @@ impl FstTextNormalizer {
         }
 
         // Use decode_linear_fst to get the path
-        let path = decode_linear_fst(fst)
-            .map_err(|e| WeTextError::FstOperationError(e.to_string()))?;
+        let path =
+            decode_linear_fst(fst).map_err(|e| WeTextError::FstOperationError(e.to_string()))?;
 
         // FST labels can be either:
         // 1. Unicode code points (for CJK characters, code > 255)
@@ -167,4 +167,3 @@ mod tests {
         assert_eq!(fst.num_states(), 6); // 5 chars + 1 (start state)
     }
 }
-

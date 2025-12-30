@@ -28,8 +28,7 @@ fn test_compare_with_python() {
         }
     };
 
-    let test_cases: Vec<TestCase> =
-        serde_json::from_str(&data).expect("Failed to parse JSON");
+    let test_cases: Vec<TestCase> = serde_json::from_str(&data).expect("Failed to parse JSON");
 
     let mut passed = 0;
     let mut failed = 0;
@@ -79,4 +78,3 @@ fn test_compare_with_python() {
     println!("\nResults: {} passed, {} failed", passed, failed);
     assert_eq!(failed, 0, "Some comparison tests failed");
 }
-

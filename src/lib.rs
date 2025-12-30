@@ -50,4 +50,3 @@ pub fn normalize<P: AsRef<std::path::Path>>(fst_dir: P, text: &str) -> Result<St
     let mut normalizer = Normalizer::with_defaults(fst_dir);
     normalizer.normalize(text)
 }
-

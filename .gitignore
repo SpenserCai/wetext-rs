@@ -35,6 +35,9 @@ fsts
 # Test outputs
 tests/reference_outputs.json
 
+# Test virtual environment
+tests/venv/
+
 # Benchmark results
 criterion/
 

@@ -80,7 +80,11 @@ impl Normalizer {
     }
 
     /// Normalize text with a specific configuration
-    pub fn normalize_with_config(&mut self, text: &str, config: &NormalizerConfig) -> Result<String> {
+    pub fn normalize_with_config(
+        &mut self,
+        text: &str,
+        config: &NormalizerConfig,
+    ) -> Result<String> {
         let mut text = text.to_string();
 
         // 1. Fix English contractions
@@ -144,9 +148,7 @@ impl Normalizer {
             // Japanese Hiragana: U+3040 - U+309F
             // Japanese Katakana: U+30A0 - U+30FF
             // Note: Python wetext does NOT have this detection - it would return "zh" for Japanese text
-            if ('\u{3040}'..='\u{309f}').contains(&ch)
-                || ('\u{30a0}'..='\u{30ff}').contains(&ch)
-            {
+            if ('\u{3040}'..='\u{309f}').contains(&ch) || ('\u{30a0}'..='\u{30ff}').contains(&ch) {
                 return Language::Ja;
             }
 
@@ -269,7 +271,12 @@ impl Normalizer {
     }
 
     /// Verbalize using verbalizer FST
-    fn verbalize(&mut self, text: &str, lang: Language, config: &NormalizerConfig) -> Result<String> {
+    fn verbalize(
+        &mut self,
+        text: &str,
+        lang: Language,
+        config: &NormalizerConfig,
+    ) -> Result<String> {
         let fst_path = match (lang, config.operator) {
             (Language::En, Operator::Tn) => "en/tn/verbalizer.fst",
             (Language::Zh, Operator::Tn) => {
@@ -318,4 +325,3 @@ mod tests {
         assert_eq!(Normalizer::detect_language(""), Language::En); // Empty defaults to English
     }
 }
-

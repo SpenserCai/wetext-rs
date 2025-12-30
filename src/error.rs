@@ -36,4 +36,3 @@ pub enum WeTextError {
 
 /// Result type alias for WeText operations
 pub type Result<T> = std::result::Result<T, WeTextError>;
-

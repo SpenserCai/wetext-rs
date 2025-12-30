@@ -141,10 +141,15 @@ impl TokenParser {
         );
         m.insert(
             "money".to_string(),
-            vec!["integer_part", "fractional_part", "quantity", "currency_maj"]
-                .into_iter()
-                .map(String::from)
-                .collect(),
+            vec![
+                "integer_part",
+                "fractional_part",
+                "quantity",
+                "currency_maj",
+            ]
+            .into_iter()
+            .map(String::from)
+            .collect(),
         );
         m
     }
@@ -244,8 +249,7 @@ impl TokenParser {
 
             // Parse token name (must be alphabetic or underscore)
             let name_start = index;
-            while index < chars.len()
-                && (chars[index].is_ascii_alphabetic() || chars[index] == '_')
+            while index < chars.len() && (chars[index].is_ascii_alphabetic() || chars[index] == '_')
             {
                 index += 1;
             }
@@ -303,10 +307,13 @@ impl TokenParser {
                     continue;
                 }
 
-                // Skip ': "'
-                while index < chars.len()
-                    && (chars[index] == ':' || chars[index] == ' ' || chars[index] == '"')
-                {
+                // Skip ':' and spaces
+                while index < chars.len() && (chars[index] == ':' || chars[index] == ' ') {
+                    index += 1;
+                }
+
+                // Skip opening quote '"'
+                if index < chars.len() && chars[index] == '"' {
                     index += 1;
                 }
 
@@ -361,4 +368,3 @@ mod tests {
         assert_eq!(parser.reorder("   ").unwrap(), "");
     }
 }
-
