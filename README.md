@@ -1,6 +1,44 @@
 # wetext-rs
 
+[![Crates.io](https://img.shields.io/crates/v/wetext-rs.svg)](https://crates.io/crates/wetext-rs)
+[![Documentation](https://docs.rs/wetext-rs/badge.svg)](https://docs.rs/wetext-rs)
+[![License](https://img.shields.io/crates/l/wetext-rs.svg)](https://github.com/SpenserCai/wetext-rs/blob/main/LICENSE)
+[![Rust](https://img.shields.io/badge/rust-1.70%2B-orange.svg)](https://www.rust-lang.org)
+
 A Rust implementation of [WeText](https://github.com/pengzhendong/wetext) for text normalization in TTS (Text-to-Speech) applications.
+
+---
+
+## Table of Contents
+
+- [wetext-rs](#wetext-rs)
+  - [Table of Contents](#table-of-contents)
+  - [Background](#background)
+  - [Features](#features)
+  - [Installation](#installation)
+  - [FST Weight Files](#fst-weight-files)
+    - [Download Options](#download-options)
+  - [Usage](#usage)
+    - [Basic Usage](#basic-usage)
+    - [With Configuration](#with-configuration)
+    - [Inverse Text Normalization (ITN)](#inverse-text-normalization-itn)
+    - [Convenience Function](#convenience-function)
+  - [Configuration Options](#configuration-options)
+  - [Examples](#examples)
+    - [Chinese Text Normalization](#chinese-text-normalization)
+    - [Chinese Inverse Text Normalization](#chinese-inverse-text-normalization)
+    - [English Text Normalization](#english-text-normalization)
+    - [Japanese Text Normalization](#japanese-text-normalization)
+  - [Dependencies](#dependencies)
+  - [Compatibility with Python WeText](#compatibility-with-python-wetext)
+  - [Development](#development)
+    - [Running Tests](#running-tests)
+    - [Consistency Testing with Python WeText](#consistency-testing-with-python-wetext)
+    - [Code Quality](#code-quality)
+  - [Credits](#credits)
+  - [License](#license)
+
+---
 
 ## Background
 
@@ -11,6 +49,8 @@ This project is a Rust port of the Python [wetext](https://github.com/pengzhendo
 3. **Enable standalone deployment** - Create a single binary that can be deployed without Python runtime
 
 The original Python implementation uses [kaldifst](https://github.com/k2-fsa/kaldifst) for FST operations. This Rust version uses [rustfst](https://github.com/Garvys/rustfst), a pure Rust implementation of OpenFST, to achieve the same functionality.
+
+---
 
 ## Features
 
@@ -28,6 +68,8 @@ The original Python implementation uses [kaldifst](https://github.com/k2-fsa/kal
   - Punctuation removal
   - Erhua (儿化音) removal
 
+---
+
 ## Installation
 
 Add to your `Cargo.toml`:
@@ -37,13 +79,18 @@ Add to your `Cargo.toml`:
 wetext-rs = "0.1"
 ```
 
+---
+
 ## FST Weight Files
 
 This library requires FST (Finite State Transducer) weight files for text normalization. The weight files can be downloaded from:
 
-**ModelScope**: [pengzhendong/wetext](https://modelscope.cn/models/pengzhendong/wetext)
+> **ModelScope**: [pengzhendong/wetext](https://modelscope.cn/models/pengzhendong/wetext)
 
 Download the weight files and organize them in the following structure:
+
+<details>
+<summary>📁 Click to expand directory structure</summary>
 
 ```
 fsts/
@@ -75,19 +122,25 @@ fsts/
         └── verbalizer.fst
 ```
 
-You can download using ModelScope CLI:
+</details>
+
+### Download Options
+
+**Option 1: ModelScope CLI**
 
 ```bash
 pip install modelscope
 modelscope download --model pengzhendong/wetext --local_dir ./fsts
 ```
 
-Or using Git LFS:
+**Option 2: Git LFS**
 
 ```bash
 git lfs install
 git clone https://www.modelscope.cn/pengzhendong/wetext.git fsts
 ```
+
+---
 
 ## Usage
 
@@ -144,10 +197,12 @@ let result = normalize("path/to/fsts", "123").unwrap();
 println!("{}", result);  // 幺二三
 ```
 
+---
+
 ## Configuration Options
 
 | Option | Default | Description |
-|--------|---------|-------------|
+|:-------|:-------:|:------------|
 | `lang` | `Auto` | Language: `Auto`, `En`, `Zh`, `Ja` |
 | `operator` | `Tn` | Operation: `Tn` (text normalization), `Itn` (inverse) |
 | `fix_contractions` | `false` | Expand English contractions |
@@ -159,12 +214,14 @@ println!("{}", result);  // 幺二三
 | `enable_0_to_9` | `false` | Enable 0-9 digit conversion in ITN |
 | `remove_erhua` | `false` | Remove erhua (儿化音) |
 
+---
+
 ## Examples
 
 ### Chinese Text Normalization
 
 | Input | Output |
-|-------|--------|
+|:------|:-------|
 | `123` | `幺二三` |
 | `2024年` | `二零二四年` |
 | `2024年1月15日` | `二零二四年一月十五日` |
@@ -176,7 +233,7 @@ println!("{}", result);  // 幺二三
 ### Chinese Inverse Text Normalization
 
 | Input | Output |
-|-------|--------|
+|:------|:-------|
 | `一百二十三` | `123` |
 | `二零二四年` | `2024年` |
 | `一点五` | `1.5` |
@@ -184,7 +241,7 @@ println!("{}", result);  // 幺二三
 ### English Text Normalization
 
 | Input | Output |
-|-------|--------|
+|:------|:-------|
 | `$100` | `one hundred dollars` |
 | `January 15, 2024` | `january fifteenth twenty twenty four` |
 | `3.14` | `three point one four` |
@@ -192,18 +249,24 @@ println!("{}", result);  // 幺二三
 ### Japanese Text Normalization
 
 | Input | Output |
-|-------|--------|
+|:------|:-------|
 | `100円` | `百円` |
 | `2024年` | `二千二十四年` |
 | `3月15日` | `三月十五日` |
 
+---
+
 ## Dependencies
 
-- [rustfst](https://github.com/Garvys/rustfst) - FST operations (Rust implementation of OpenFST)
-- [thiserror](https://github.com/dtolnay/thiserror) - Error handling
-- [regex](https://github.com/rust-lang/regex) - Regular expressions
-- [once_cell](https://github.com/matklad/once_cell) - Lazy initialization
-- [serde_json](https://github.com/serde-rs/json) - JSON parsing
+| Crate | Purpose |
+|:------|:--------|
+| [rustfst](https://github.com/Garvys/rustfst) | FST operations (Rust implementation of OpenFST) |
+| [thiserror](https://github.com/dtolnay/thiserror) | Error handling |
+| [regex](https://github.com/rust-lang/regex) | Regular expressions |
+| [once_cell](https://github.com/matklad/once_cell) | Lazy initialization |
+| [serde_json](https://github.com/serde-rs/json) | JSON parsing |
+
+---
 
 ## Compatibility with Python WeText
 
@@ -212,11 +275,13 @@ This Rust implementation is designed to be compatible with the Python [wetext](h
 **Differences from Python version:**
 
 | Aspect | Python wetext | Rust wetext-rs |
-|--------|--------------|----------------|
+|:-------|:--------------|:---------------|
 | Language detection | Chinese/English only | Adds Japanese detection (via Hiragana/Katakana) |
 | Contractions | Runtime loaded | Compile-time embedded |
 | Error handling | Python exceptions | `Result<T, WeTextError>` |
 | FST library | kaldifst | rustfst |
+
+---
 
 ## Development
 
@@ -233,6 +298,9 @@ cargo test -- --nocapture
 ### Consistency Testing with Python WeText
 
 To verify that the Rust implementation produces identical results to the Python version:
+
+<details>
+<summary>🧪 Click to expand testing instructions</summary>
 
 1. **Setup Python environment** (Python 3.13 recommended):
 
@@ -258,12 +326,15 @@ cargo test test_compare_with_python -- --ignored --nocapture
 ```
 
 Expected output:
+
 ```
 ✓ PASS: '123' (zh/tn) => '幺二三'
 ✓ PASS: '2024年1月15日' (zh/tn) => '二零二四年一月十五日'
 ...
 Results: 20 passed, 0 failed
 ```
+
+</details>
 
 ### Code Quality
 
@@ -278,12 +349,16 @@ cargo fmt
 cargo fmt -- --check
 ```
 
+---
+
 ## Credits
 
-- Original Python implementation: [pengzhendong/wetext](https://github.com/pengzhendong/wetext)
-- FST weight files: [ModelScope - pengzhendong/wetext](https://modelscope.cn/models/pengzhendong/wetext)
-- WeTextProcessing grammar: [wenet-e2e/WeTextProcessing](https://github.com/wenet-e2e/WeTextProcessing)
+- **Original Python implementation**: [pengzhendong/wetext](https://github.com/pengzhendong/wetext)
+- **FST weight files**: [ModelScope - pengzhendong/wetext](https://modelscope.cn/models/pengzhendong/wetext)
+- **WeTextProcessing grammar**: [wenet-e2e/WeTextProcessing](https://github.com/wenet-e2e/WeTextProcessing)
+
+---
 
 ## License
 
-Apache-2.0
+This project is licensed under the [Apache-2.0 License](LICENSE).
