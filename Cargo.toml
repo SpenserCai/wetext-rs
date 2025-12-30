@@ -1,0 +1,37 @@
+[package]
+name = "wetext-rs"
+version = "0.1.0"
+edition = "2021"
+authors = ["SpenserCai <spensercai@gmail.com>"]
+description = "Text normalization library for TTS, Rust implementation of WeText"
+license = "Apache-2.0"
+repository = "https://github.com/SpenserCai/wetext-rs"
+keywords = ["text-normalization", "tts", "fst", "nlp"]
+categories = ["text-processing"]
+
+[dependencies]
+# FST operations - use latest version from crates.io
+# Source version in refs/rustfst is 1.2.6
+# Note: rustfst defaults to state-label-u32 feature (Label = u32)
+rustfst = "1"
+# Error handling
+anyhow = "1"
+thiserror = "2"
+# Lazy initialization
+once_cell = "1"
+# Regex for text processing
+regex = "1"
+# Unicode handling
+unicode-segmentation = "1"
+# JSON parsing for contractions data (loaded at runtime from embedded JSON)
+serde_json = "1"
+
+[dev-dependencies]
+tempfile = "3"
+serde = { version = "1", features = ["derive"] }
+
+[features]
+default = []
+# Embed FST files into the binary
+embedded-fsts = []
+
