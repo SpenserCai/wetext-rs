@@ -218,6 +218,66 @@ This Rust implementation is designed to be compatible with the Python [wetext](h
 | Error handling | Python exceptions | `Result<T, WeTextError>` |
 | FST library | kaldifst | rustfst |
 
+## Development
+
+### Running Tests
+
+```bash
+# Run all unit and integration tests
+cargo test
+
+# Run with verbose output
+cargo test -- --nocapture
+```
+
+### Consistency Testing with Python WeText
+
+To verify that the Rust implementation produces identical results to the Python version:
+
+1. **Setup Python environment** (Python 3.13 recommended):
+
+```bash
+cd tests
+python3.13 -m venv venv
+source venv/bin/activate
+pip install wetext
+```
+
+2. **Generate reference outputs** from Python:
+
+```bash
+python tests/generate_reference.py
+```
+
+This creates `tests/reference_outputs.json` with expected outputs from Python wetext.
+
+3. **Run comparison tests**:
+
+```bash
+cargo test test_compare_with_python -- --ignored --nocapture
+```
+
+Expected output:
+```
+✓ PASS: '123' (zh/tn) => '幺二三'
+✓ PASS: '2024年1月15日' (zh/tn) => '二零二四年一月十五日'
+...
+Results: 20 passed, 0 failed
+```
+
+### Code Quality
+
+```bash
+# Run clippy linter
+cargo clippy -- -D warnings
+
+# Format code
+cargo fmt
+
+# Check formatting
+cargo fmt -- --check
+```
+
 ## Credits
 
 - Original Python implementation: [pengzhendong/wetext](https://github.com/pengzhendong/wetext)
